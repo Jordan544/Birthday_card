@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
@@ -27,10 +27,12 @@
             min-height: 100vh; 
             background-color: var(--bg-color);
             background-image: radial-gradient(circle at top right, #fdf2f4, transparent 50%);
-            display: flex; align-items: center; justify-content: center; padding: 2rem;
+            display: flex; align-items: center; justify-content: center; padding: 1.5rem;
             font-family: 'Inter', sans-serif; color: var(--text-main);
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
+            overflow-x: hidden;
+            /* Prevent pull-to-refresh while clicking rapidly */
+            overscroll-behavior-y: contain; 
         }
 
         .card-container { 
@@ -41,21 +43,21 @@
         .birthday-card {
             background: var(--card-bg); 
             border-radius: 24px; 
-            padding: 4rem 3rem;
+            padding: 3rem 2rem;
             box-shadow: 0 10px 40px rgba(217, 106, 123, 0.08), 0 2px 10px rgba(0,0,0,0.02);
             border: 1px solid var(--border-color); 
             text-align: center;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
-            min-height: 500px;
+            min-height: 480px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
         h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3rem); color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600; letter-spacing: 0.5px; }
-        .sub-message { font-size: 1rem; color: var(--text-muted); margin-bottom: 3rem; font-weight: 300; letter-spacing: 1px; text-transform: uppercase; }
+        .sub-message { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 1px; text-transform: uppercase; }
 
         /* --- PHASES --- */
         .phase { display: none; opacity: 0; transition: opacity 0.5s ease; }
@@ -63,23 +65,23 @@
 
         /* --- PHASE 1: LOCK --- */
         .lock-icon { font-size: 2.5rem; color: var(--primary-pink); margin-bottom: 1.5rem; }
-        .date-badge { display: inline-block; background: var(--bg-color); padding: 0.75rem 2rem; border-radius: 50px; border: 1px solid var(--border-color); font-size: 1rem; font-weight: 500; color: var(--primary-pink); margin-bottom: 2.5rem; }
-        .countdown { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .date-badge { display: inline-block; background: var(--bg-color); padding: 0.75rem 1.5rem; border-radius: 50px; border: 1px solid var(--border-color); font-size: 1rem; font-weight: 500; color: var(--primary-pink); margin-bottom: 2.5rem; }
+        .countdown { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
         .countdown-item { display: flex; flex-direction: column; align-items: center; }
-        .countdown-value { font-size: 2.5rem; font-weight: 600; color: var(--text-main); line-height: 1; font-variant-numeric: tabular-nums; }
-        .countdown-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-top: 0.5rem; }
-        .btn-primary { background: var(--primary-pink); border: none; padding: 1.2rem 3.5rem; border-radius: 8px; font-size: 1rem; font-weight: 500; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(217, 106, 123, 0.3); }
+        .countdown-value { font-size: 2rem; font-weight: 600; color: var(--text-main); line-height: 1; font-variant-numeric: tabular-nums; }
+        .countdown-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-top: 0.5rem; }
+        .btn-primary { background: var(--primary-pink); border: none; padding: 1rem 2.5rem; border-radius: 8px; font-size: 1rem; font-weight: 500; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(217, 106, 123, 0.3); width: 100%; max-width: 250px; margin: 0 auto; }
         .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(217, 106, 123, 0.4); }
         .btn-primary:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; box-shadow: none; }
-        .note { font-size: 0.85rem; color: var(--text-muted); margin-top: 1.5rem; }
+        .note { font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; }
 
         /* --- PHASE 2: SHUFFLE GAME --- */
-        .greeting { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--text-main); margin-bottom: 0.5rem; }
-        .question { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 3rem; transition: color 0.3s; }
-        .picture-grid { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; perspective: 1000px; }
+        .greeting { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.5rem; }
+        .question { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; transition: color 0.3s; }
+        .picture-grid { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; perspective: 1000px; flex-wrap: wrap;}
         
         .picture-option { 
-            width: 180px; height: 180px; border-radius: 16px; background: var(--bg-color); 
+            width: 140px; height: 140px; border-radius: 16px; background: var(--bg-color); 
             border: 2px solid transparent; display: flex; align-items: center; justify-content: center; 
             cursor: pointer; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
             position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transform-style: preserve-3d;
@@ -91,32 +93,35 @@
         .picture-option.wrong { border: 3px solid var(--error-red); animation: shake 0.5s; pointer-events: none; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
         .picture-option img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
-        .picture-option .placeholder-text { font-size: 2.5rem; color: var(--primary-pink); opacity: 0.4; }
+        .picture-option .placeholder-text { font-size: 2rem; color: var(--primary-pink); opacity: 0.4; }
         .picture-option.reveal img { opacity: 1; }
         .picture-option.reveal .placeholder-text { display: none; }
-        .picture-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); padding: 0.8rem; font-size: 0.85rem; font-weight: 500; color: var(--text-main); transform: translateY(100%); transition: transform 0.3s ease; }
+        .picture-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); padding: 0.6rem; font-size: 0.75rem; font-weight: 500; color: var(--text-main); transform: translateY(100%); transition: transform 0.3s ease; }
         .picture-option:hover .picture-label { transform: translateY(0); }
 
         /* --- PHASE 3: ENERGY CLICKER --- */
-        .energy-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; transition: color 0.3s; }
-        .energy-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; min-height: 24px; transition: color 0.3s; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .energy-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; transition: color 0.3s; }
+        .energy-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; min-height: 24px; transition: color 0.3s; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;}
         
         .energy-bar-container {
-            width: 80%; height: 24px; background: var(--bg-color); border-radius: 12px;
+            width: 100%; max-width: 400px; height: 20px; background: var(--bg-color); border-radius: 10px;
             margin: 0 auto 3rem; overflow: hidden; border: 1px solid var(--border-color);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); position: relative;
         }
         .energy-bar-fill {
             height: 100%; width: 0%; background: linear-gradient(90deg, #f4a2b0, var(--primary-pink));
-            border-radius: 12px; transition: width 0.1s linear, background 0.3s;
+            border-radius: 10px; transition: width 0.1s linear, background 0.3s;
         }
 
         .click-heart-btn {
-            width: 120px; height: 120px; border-radius: 50%; background: var(--card-bg);
-            border: 4px solid var(--border-color); color: var(--primary-pink); font-size: 3rem;
+            width: 110px; height: 110px; border-radius: 50%; background: var(--card-bg);
+            border: 4px solid var(--border-color); color: var(--primary-pink); font-size: 2.8rem;
             display: flex; align-items: center; justify-content: center; margin: 0 auto;
             cursor: pointer; transition: all 0.1s; box-shadow: 0 10px 20px rgba(217, 106, 123, 0.15);
             user-select: none;
+            /* Prevent double-tap zoom on mobile */
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent;
         }
         .click-heart-btn:active { transform: scale(0.9); background: var(--primary-pink); color: white; }
         
@@ -124,42 +129,72 @@
         @keyframes floatParticle { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
 
         /* --- PHASE 4: 3D ENVELOPE MODAL --- */
-        .boxMail { position: fixed; background: rgba(45, 42, 43, 0.7); backdrop-filter: blur(5px); width: 100%; height: 100%; opacity: 0; top: 0; left: 0; display: flex; justify-content: center; align-items: center; transform: scale(0.95); visibility: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; }
+        .boxMail { 
+            position: fixed; background: rgba(45, 42, 43, 0.85); backdrop-filter: blur(5px); 
+            width: 100%; height: 100%; opacity: 0; top: 0; left: 0; 
+            display: flex; justify-content: center; align-items: center; 
+            transform: scale(0.95); visibility: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; 
+        }
         .boxMail.active { opacity: 1; visibility: visible; transform: scale(1); }
-        .boxMail .fa-xmark { position: absolute; top: 30px; right: 40px; font-size: 28px; cursor: pointer; color: #fff; transition: all 0.3s; }
+        .boxMail .fa-xmark { position: absolute; top: 20px; right: 20px; font-size: 28px; cursor: pointer; color: #fff; transition: all 0.3s; z-index: 10; }
         .boxMail .fa-xmark:hover { transform: scale(1.1); opacity: 0.8; }
-        .boxMail-container { position: relative; width: 750px; height: 500px; display: flex; perspective: 2000px; transition: all 0.5s; }
+        
+        /* Made the envelope container responsive */
+        .boxMail-container { 
+            position: relative; width: 90vw; max-width: 750px; height: 60vh; max-height: 500px; 
+            display: flex; perspective: 2000px; transition: all 0.5s; 
+        }
         .boxMail-container:hover { transform: rotate(-1deg); }
-        .boxMail-container:hover .card1 { transform: translate(-187px, -250px) rotateY(-140deg); }
-        .card1, .card2 { position: absolute; width: 50%; height: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        .card1 { background: var(--envelope-pink); color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 2; transform-style: preserve-3d; transform-origin: left; transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
-        .card1 .userImg { width: 90px; height: 90px; background-color: white; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.5); margin-bottom: 20px; }
+        .boxMail-container:hover .card1 { transform: translate(-50%, -50%) rotateY(-140deg); }
+        
+        .card1, .card2 { 
+            position: absolute; width: 50%; height: 100%; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+        }
+        
+        .card1 { 
+            background: var(--envelope-pink); color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; 
+            z-index: 2; transform-style: preserve-3d; transform-origin: left; transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); 
+        }
+        .card1 .userImg { width: 80px; height: 80px; background-color: white; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.5); margin-bottom: 15px; }
         .card1 .userImg img { width: 100%; height: 100%; object-fit: cover; }
-        .card1 h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 500; margin-bottom: 10px; letter-spacing: 1px; }
-        .card1 h3 { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600; width: 80%; text-align: center; line-height: 1.2; }
+        .card1 h4 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 500; margin-bottom: 10px; letter-spacing: 1px; }
+        .card1 h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 600; width: 80%; text-align: center; line-height: 1.2; }
+        
         .card2 { background: #fdfbf7; z-index: 1; transform-style: preserve-3d; transform-origin: left; transition: all 1s; }
-        .card2-content { width: 100%; height: 100%; position: relative; background: #fff; overflow-y: auto; color: var(--text-main); padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-        .card2 h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px; text-align: center; color: var(--primary-pink); opacity: 0; transition: opacity 0.5s; }
-        .card2 p { font-size: 1.05rem; line-height: 1.8; color: var(--text-main); opacity: 0; transition: opacity 0.5s; text-align: justify; }
+        .card2-content { width: 100%; height: 100%; position: relative; background: #fff; overflow-y: auto; color: var(--text-main); padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+        .card2 h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 15px; text-align: center; color: var(--primary-pink); opacity: 0; transition: opacity 0.5s; }
+        .card2 p { font-size: 0.95rem; line-height: 1.6; color: var(--text-main); opacity: 0; transition: opacity 0.5s; text-align: justify; }
+        
         .boxMail-container:hover .card2 p { opacity: 1; transition-delay: 0.8s; }
         .boxMail-container:hover .card2 h3 { opacity: 1; transition-delay: 0.4s; }
-        .imageCute2 { position: absolute; bottom: 20px; right: 20px; opacity: 0; transition: 1s; }
+        .imageCute2 { position: absolute; bottom: 15px; right: 15px; opacity: 0; transition: 1s; }
         .boxMail-container:hover .imageCute2 { opacity: 1; transition-delay: 1.5s; }
-        .imageCute2 i { color: var(--primary-pink); font-size: 2rem; }
+        .imageCute2 i { color: var(--primary-pink); font-size: 1.5rem; }
 
         /* Test Button */
-        .test-btn { position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #2d2a2b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s; }
+        .test-btn { position: fixed; bottom: 15px; right: 15px; z-index: 9999; background: #2d2a2b; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s; }
         .test-btn:hover { background: #000; }
 
-        @media (max-width: 768px) {
-            .birthday-card { padding: 2.5rem 1.5rem; }
-            .picture-grid { flex-direction: column; align-items: center; }
-            .picture-option { width: 140px; height: 140px; }
-            .boxMail-container { width: 90vw; height: 60vh; }
-            .boxMail-container:hover .card1 { transform: translate(-40%, -50%) rotateY(-140deg); }
+        /* --- MOBILE SPECIFIC FIXES --- */
+        @media (max-width: 600px) {
+            .birthday-card { padding: 2rem 1rem; min-height: 400px; }
+            .picture-grid { gap: 0.5rem; }
+            .picture-option { width: 90px; height: 90px; border-radius: 12px; }
+            .picture-option .placeholder-text { font-size: 1.5rem; }
+            .picture-label { font-size: 0.65rem; padding: 0.4rem; }
+            
+            .countdown { gap: 0.5rem; }
+            .countdown-value { font-size: 1.5rem; }
+            .countdown-label { font-size: 0.6rem; }
+            
+            .boxMail-container { width: 90vw; height: 55vh; }
+            /* Adjusted mobile envelope open angle so it doesn't clip off screen */
+            .boxMail-container:hover .card1 { transform: translate(-30%, -50%) rotateY(-140deg); }
             .card1, .card2 { width: 100%; height: 100%; }
-            .card1 h3 { font-size: 2rem; }
-            .card2 p { font-size: 1rem; }
+            .card2-content { padding: 15px; }
+            .card2 p { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -199,7 +234,6 @@
             <div class="phase" id="phase3">
                 <div class="energy-title" id="energyTitle">You found yourself!</div>
                 
-                <!-- Using FontAwesome icons here instead of emojis -->
                 <div class="energy-desc" id="energyDesc">
                     <i class="fa-solid fa-bolt"></i> Click the heart rapidly to keep the bar full.
                 </div>
@@ -265,12 +299,10 @@
 
             // --- ENERGY GAME VARIABLES ---
             let energy = 0;
-            let maxEnergy = 100;
             let isEnergyGameActive = false;
             let decayInterval;
             let hasWonEnergyGame = false;
 
-            // Icons and messages for the energy game
             const messages = [
                 '<i class="fa-solid fa-bolt"></i> Click the heart rapidly!',
                 '<i class="fa-solid fa-fire"></i> Keep going, you\'re doing great!',
@@ -428,19 +460,16 @@
                 energyDesc.innerHTML = messages[0];
                 energyDesc.style.color = "var(--text-muted)";
 
-                // Start the decay loop
                 if (decayInterval) clearInterval(decayInterval);
                 decayInterval = setInterval(() => {
                     if (!isEnergyGameActive) return;
                     
                     if (energy > 0) {
-                        // Increased decay so she HAS to click fast
                         energy -= 2.5; 
                         if (energy < 0) energy = 0;
                         updateEnergyBar();
                     }
 
-                    // Check if she's losing
                     if (energy < 30 && energy > 0) {
                         energyDesc.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Hurry, the energy is draining!';
                         energyDesc.style.color = "var(--error-red)";
@@ -457,14 +486,12 @@
             function updateEnergyBar() {
                 energyBar.style.width = energy + '%';
                 
-                // Change color based on energy level
                 if (energy > 80) {
-                    energyBar.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)'; // Green when almost full
+                    energyBar.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)';
                 } else {
                     energyBar.style.background = 'linear-gradient(90deg, #f4a2b0, var(--primary-pink))';
                 }
 
-                // Win condition
                 if (energy >= 100 && !hasWonEnergyGame) {
                     hasWonEnergyGame = true;
                     isEnergyGameActive = false;
@@ -481,27 +508,44 @@
                 }
             }
 
-            clickHeart.addEventListener('click', function(e) {
+            // Use touchstart and mousedown for faster mobile response
+            function handleHeartClick(e) {
                 if (!isEnergyGameActive || hasWonEnergyGame) return;
+                e.preventDefault(); // Prevent double tap zoom
 
-                // Add click animation
                 clickHeart.style.transform = 'scale(0.85)';
                 setTimeout(() => clickHeart.style.transform = 'scale(1)', 100);
 
                 // Create floating particle
+                const rect = clickHeart.getBoundingClientRect();
+                let clickX = rect.width / 2;
+                let clickY = rect.height / 2;
+                
+                // Adjust for mouse/touch coordinates
+                if (e.type === 'mousedown') {
+                    clickX = e.offsetX;
+                    clickY = e.offsetY;
+                } else if (e.touches && e.touches[0]) {
+                    clickX = e.touches[0].clientX - rect.left;
+                    clickY = e.touches[0].clientY - rect.top;
+                }
+
                 const particle = document.createElement('i');
                 particle.classList.add('fa-solid', 'fa-heart', 'particle');
-                particle.style.left = (e.offsetX - 10) + 'px';
-                particle.style.top = (e.offsetY - 10) + 'px';
+                particle.style.left = (clickX - 10) + 'px';
+                particle.style.top = (clickY - 10) + 'px';
                 clickHeart.appendChild(particle);
                 setTimeout(() => particle.remove(), 1000);
 
-                // Decreased energy per click (was 6, now 2) so it takes much longer
                 energy += 2;
                 if (energy > 100) energy = 100;
                 
                 updateEnergyBar();
-            });
+            }
+
+            // Attach both to ensure mobile and desktop work flawlessly
+            clickHeart.addEventListener('mousedown', handleHeartClick);
+            clickHeart.addEventListener('touchstart', handleHeartClick, {passive: false});
 
             // --- CLOSE ENVELOPE ---
             closeLetter.addEventListener('click', function() {
