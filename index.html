@@ -458,7 +458,8 @@
 
                 if (decayInterval) clearInterval(decayInterval);
                 
-                // Slower decay: Lose 1% every 150ms (about 6.6% per second)
+                // Decay: Lose 1% every 100ms (10% per second).
+                // Click gives +6%. She needs about 15-20 clicks total to win.
                 decayInterval = setInterval(() => {
                     if (!isEnergyGameActive) return;
                     
@@ -478,7 +479,7 @@
                         energyDesc.innerHTML = '<i class="fa-solid fa-fire-flame-curved"></i> Almost there, keep clicking!';
                         energyDesc.style.color = "var(--success-green)";
                     }
-                }, 150);
+                }, 100);
             }
 
             function updateEnergyBar() {
@@ -532,8 +533,8 @@
                 clickHeart.appendChild(particle);
                 setTimeout(() => particle.remove(), 1000);
 
-                // Boosted click: +10% per click
-                energy += 10;
+                // Perfect balance: +6% per click
+                energy += 6;
                 if (energy > 100) energy = 100;
                 
                 updateEnergyBar();
