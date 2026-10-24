@@ -458,12 +458,12 @@
 
                 if (decayInterval) clearInterval(decayInterval);
                 
-                // Balanced decay: Lose 1.5% every 150ms (10% per second)
+                // Slower decay: Lose 1% every 150ms (about 6.6% per second)
                 decayInterval = setInterval(() => {
                     if (!isEnergyGameActive) return;
                     
                     if (energy > 0) {
-                        energy -= 1.5; 
+                        energy -= 1; 
                         if (energy < 0) energy = 0;
                         updateEnergyBar();
                     }
@@ -532,8 +532,8 @@
                 clickHeart.appendChild(particle);
                 setTimeout(() => particle.remove(), 1000);
 
-                // Balanced click: +4% per click
-                energy += 4;
+                // Boosted click: +10% per click
+                energy += 10;
                 if (energy > 100) energy = 100;
                 
                 updateEnergyBar();
@@ -556,4 +556,3 @@
     </script>
 </body>
 </html>
-<!-- cool -->
