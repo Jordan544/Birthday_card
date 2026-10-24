@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-color: #faf5f6;
+            --card-bg: #ffffff;
+            --primary-pink: #d96a7b;
+            --primary-hover: #c25868;
+            --text-main: #2d2a2b;
+            --text-muted: #7a7375;
+            --border-color: #ebd6d9;
+            --envelope-pink: #e88393;
+            --success-green: #4ade80;
+            --error-red: #ef4444;
+        }
+
+        body {
+            min-height: 100vh; 
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #fdf2f4, transparent 50%);
+            display: flex; align-items: center; justify-content: center; padding: 2rem;
+            font-family: 'Inter', sans-serif; color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        .card-container { 
+            position: relative; z-index: 10; width: 100%; max-width: 850px; 
+            perspective: 1500px;
+        }
+
+        .birthday-card {
+            background: var(--card-bg); 
+            border-radius: 24px; 
+            padding: 4rem 3rem;
+            box-shadow: 0 10px 40px rgba(217, 106, 123, 0.08), 0 2px 10px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color); 
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3rem); color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600; letter-spacing: 0.5px; }
+        .sub-message { font-size: 1rem; color: var(--text-muted); margin-bottom: 3rem; font-weight: 300; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* --- PHASES --- */
+        .phase { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .phase.active { display: block; opacity: 1; }
+
+        /* --- PHASE 1: LOCK --- */
+        .lock-icon { font-size: 2.5rem; color: var(--primary-pink); margin-bottom: 1.5rem; }
+        .date-badge { display: inline-block; background: var(--bg-color); padding: 0.75rem 2rem; border-radius: 50px; border: 1px solid var(--border-color); font-size: 1rem; font-weight: 500; color: var(--primary-pink); margin-bottom: 2.5rem; }
+        .countdown { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .countdown-item { display: flex; flex-direction: column; align-items: center; }
+        .countdown-value { font-size: 2.5rem; font-weight: 600; color: var(--text-main); line-height: 1; font-variant-numeric: tabular-nums; }
+        .countdown-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-top: 0.5rem; }
+        .btn-primary { background: var(--primary-pink); border: none; padding: 1.2rem 3.5rem; border-radius: 8px; font-size: 1rem; font-weight: 500; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(217, 106, 123, 0.3); }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(217, 106, 123, 0.4); }
+        .btn-primary:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; box-shadow: none; }
+        .note { font-size: 0.85rem; color: var(--text-muted); margin-top: 1.5rem; }
+
+        /* --- PHASE 2: SHUFFLE GAME --- */
+        .greeting { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--text-main); margin-bottom: 0.5rem; }
+        .question { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 3rem; transition: color 0.3s; }
+        .picture-grid { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; perspective: 1000px; }
+        
+        .picture-option { 
+            width: 180px; height: 180px; border-radius: 16px; background: var(--bg-color); 
+            border: 2px solid transparent; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transform-style: preserve-3d;
+        }
+        .picture-option:hover { transform: translateY(-5px) scale(1.02); border-color: var(--border-color); box-shadow: 0 10px 25px rgba(217, 106, 123, 0.15); z-index: 2; }
+        .picture-option.shuffling { animation: shuffleAnim 0.5s ease-in-out; }
+        @keyframes shuffleAnim { 0% { transform: scale(1) rotateY(0deg); } 50% { transform: scale(0.9) rotateY(90deg); opacity: 0.5; } 100% { transform: scale(1) rotateY(0deg); } }
+        .picture-option.correct { border: 4px solid var(--success-green); box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15), 0 10px 25px rgba(74, 222, 128, 0.2); transform: scale(1.05); pointer-events: none; }
+        .picture-option.wrong { border: 3px solid var(--error-red); animation: shake 0.5s; pointer-events: none; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+        .picture-option img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+        .picture-option .placeholder-text { font-size: 2.5rem; color: var(--primary-pink); opacity: 0.4; }
+        .picture-option.reveal img { opacity: 1; }
+        .picture-option.reveal .placeholder-text { display: none; }
+        .picture-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); padding: 0.8rem; font-size: 0.85rem; font-weight: 500; color: var(--text-main); transform: translateY(100%); transition: transform 0.3s ease; }
+        .picture-option:hover .picture-label { transform: translateY(0); }
+
+        /* --- PHASE 3: ENERGY CLICKER --- */
+        .energy-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; transition: color 0.3s; }
+        .energy-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; min-height: 24px; transition: color 0.3s; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        
+        .energy-bar-container {
+            width: 80%; height: 24px; background: var(--bg-color); border-radius: 12px;
+            margin: 0 auto 3rem; overflow: hidden; border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); position: relative;
+        }
+        .energy-bar-fill {
+            height: 100%; width: 0%; background: linear-gradient(90deg, #f4a2b0, var(--primary-pink));
+            border-radius: 12px; transition: width 0.1s linear, background 0.3s;
+        }
+
+        .click-heart-btn {
+            width: 120px; height: 120px; border-radius: 50%; background: var(--card-bg);
+            border: 4px solid var(--border-color); color: var(--primary-pink); font-size: 3rem;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto;
+            cursor: pointer; transition: all 0.1s; box-shadow: 0 10px 20px rgba(217, 106, 123, 0.15);
+            user-select: none;
+        }
+        .click-heart-btn:active { transform: scale(0.9); background: var(--primary-pink); color: white; }
+        
+        .particle { position: absolute; color: var(--primary-pink); font-size: 1.5rem; pointer-events: none; animation: floatParticle 1s ease-out forwards; z-index: 100; }
+        @keyframes floatParticle { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
+
+        /* --- PHASE 4: 3D ENVELOPE MODAL --- */
+        .boxMail { position: fixed; background: rgba(45, 42, 43, 0.7); backdrop-filter: blur(5px); width: 100%; height: 100%; opacity: 0; top: 0; left: 0; display: flex; justify-content: center; align-items: center; transform: scale(0.95); visibility: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; }
+        .boxMail.active { opacity: 1; visibility: visible; transform: scale(1); }
+        .boxMail .fa-xmark { position: absolute; top: 30px; right: 40px; font-size: 28px; cursor: pointer; color: #fff; transition: all 0.3s; }
+        .boxMail .fa-xmark:hover { transform: scale(1.1); opacity: 0.8; }
+        .boxMail-container { position: relative; width: 750px; height: 500px; display: flex; perspective: 2000px; transition: all 0.5s; }
+        .boxMail-container:hover { transform: rotate(-1deg); }
+        .boxMail-container:hover .card1 { transform: translate(-187px, -250px) rotateY(-140deg); }
+        .card1, .card2 { position: absolute; width: 50%; height: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .card1 { background: var(--envelope-pink); color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 2; transform-style: preserve-3d; transform-origin: left; transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
+        .card1 .userImg { width: 90px; height: 90px; background-color: white; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.5); margin-bottom: 20px; }
+        .card1 .userImg img { width: 100%; height: 100%; object-fit: cover; }
+        .card1 h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 500; margin-bottom: 10px; letter-spacing: 1px; }
+        .card1 h3 { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600; width: 80%; text-align: center; line-height: 1.2; }
+        .card2 { background: #fdfbf7; z-index: 1; transform-style: preserve-3d; transform-origin: left; transition: all 1s; }
+        .card2-content { width: 100%; height: 100%; position: relative; background: #fff; overflow-y: auto; color: var(--text-main); padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .card2 h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px; text-align: center; color: var(--primary-pink); opacity: 0; transition: opacity 0.5s; }
+        .card2 p { font-size: 1.05rem; line-height: 1.8; color: var(--text-main); opacity: 0; transition: opacity 0.5s; text-align: justify; }
+        .boxMail-container:hover .card2 p { opacity: 1; transition-delay: 0.8s; }
+        .boxMail-container:hover .card2 h3 { opacity: 1; transition-delay: 0.4s; }
+        .imageCute2 { position: absolute; bottom: 20px; right: 20px; opacity: 0; transition: 1s; }
+        .boxMail-container:hover .imageCute2 { opacity: 1; transition-delay: 1.5s; }
+        .imageCute2 i { color: var(--primary-pink); font-size: 2rem; }
+
+        /* Test Button */
+        .test-btn { position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #2d2a2b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s; }
+        .test-btn:hover { background: #000; }
+
+        @media (max-width: 768px) {
+            .birthday-card { padding: 2.5rem 1.5rem; }
+            .picture-grid { flex-direction: column; align-items: center; }
+            .picture-option { width: 140px; height: 140px; }
+            .boxMail-container { width: 90vw; height: 60vh; }
+            .boxMail-container:hover .card1 { transform: translate(-40%, -50%) rotateY(-140deg); }
+            .card1, .card2 { width: 100%; height: 100%; }
+            .card1 h3 { font-size: 2rem; }
+            .card2 p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TEST BUTTON (Remove this line before sending to your friend) -->
+    <button class="test-btn" onclick="document.getElementById('unlockBtn').disabled = false; document.getElementById('unlockBtn').click();">Test Unlock</button>
+
+    <div class="card-container">
+        <div class="birthday-card">
+            
+            <!-- PHASE 1: LOCK SCREEN -->
+            <div class="phase active" id="phase1">
+                <h1>Happy Birthday</h1>
+                <div class="sub-message">A special surprise awaits</div>
+                <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+                <div class="date-badge">November 2nd, 2026</div>
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item"><div class="countdown-value" id="days">00</div><div class="countdown-label">Days</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="hours">00</div><div class="countdown-label">Hours</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="minutes">00</div><div class="countdown-label">Mins</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="seconds">00</div><div class="countdown-label">Secs</div></div>
+                </div>
+                <button class="btn-primary" id="unlockBtn" disabled>Locked</button>
+                <p class="note">This card will unlock on the special day.</p>
+            </div>
+
+            <!-- PHASE 2: THE SHUFFLE GAME -->
+            <div class="phase" id="phase2">
+                <div class="greeting">Happy Birthday, Beautiful.</div>
+                <div class="question" id="gameQuestion">I have a question for you... can you find yourself?</div>
+                <div class="picture-grid" id="pictureGrid"></div>
+                <button class="btn-primary" id="nextToEnergyBtn" style="display: none; margin-top: 1rem;">Continue</button>
+            </div>
+
+            <!-- PHASE 3: ENERGY CLICKER -->
+            <div class="phase" id="phase3">
+                <div class="energy-title" id="energyTitle">You found yourself!</div>
+                
+                <!-- Using FontAwesome icons here instead of emojis -->
+                <div class="energy-desc" id="energyDesc">
+                    <i class="fa-solid fa-bolt"></i> Click the heart rapidly to keep the bar full.
+                </div>
+                
+                <div class="energy-bar-container">
+                    <div class="energy-bar-fill" id="energyBar"></div>
+                </div>
+
+                <div class="click-heart-btn" id="clickHeart">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PHASE 4: 3D ENVELOPE MODAL -->
+    <div class="boxMail" id="letterModal">
+        <i class="fa-solid fa-xmark" id="closeLetter"></i>
+        <div class="boxMail-container">
+            <div class="card1">
+                <div class="userImg">
+                    <img src="friend.jpg" alt="Photo" onerror="this.src='https://via.placeholder.com/100?text=Photo'">
+                </div>
+                <h4>To: Beautiful</h4>
+                <h3>Happy Birthday</h3>
+            </div>
+            <div class="card2">
+                <div class="card2-content">
+                    <h3>Wishing You The Best</h3>
+                    <p>Happy birthday. The day you came into my life, I wasn't really attached, but day by day you became close to my heart. Now you are truly my younger sister. I wish I could remove some of the pain from your life which you are bearing alone. But you're always welcome. You can talk anytime you want. This year, may all your dreams come true. Don't be sad, okay? Be happy.</p>
+                    <div class="imageCute2">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- CONFIG ---
+            const TARGET_DATE = new Date(2026, 10, 2, 0, 0, 0); 
+            
+            // --- ELEMENTS ---
+            const phase1 = document.getElementById('phase1');
+            const phase2 = document.getElementById('phase2');
+            const phase3 = document.getElementById('phase3');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const pictureGrid = document.getElementById('pictureGrid');
+            const gameQuestion = document.getElementById('gameQuestion');
+            const nextToEnergyBtn = document.getElementById('nextToEnergyBtn');
+            const letterModal = document.getElementById('letterModal');
+            const closeLetter = document.getElementById('closeLetter');
+            
+            const energyBar = document.getElementById('energyBar');
+            const clickHeart = document.getElementById('clickHeart');
+            const energyTitle = document.getElementById('energyTitle');
+            const energyDesc = document.getElementById('energyDesc');
+
+            let currentRealIndex = 0;
+            let isAnimating = false;
+
+            // --- ENERGY GAME VARIABLES ---
+            let energy = 0;
+            let maxEnergy = 100;
+            let isEnergyGameActive = false;
+            let decayInterval;
+            let hasWonEnergyGame = false;
+
+            // Icons and messages for the energy game
+            const messages = [
+                '<i class="fa-solid fa-bolt"></i> Click the heart rapidly!',
+                '<i class="fa-solid fa-fire"></i> Keep going, you\'re doing great!',
+                '<i class="fa-solid fa-arrow-trend-up"></i> Don\'t stop now!',
+                '<i class="fa-solid fa-heart-pulse"></i> It\'s filling up!',
+                '<i class="fa-solid fa-gauge-high"></i> Halfway there, keep clicking!',
+                '<i class="fa-solid fa-rocket"></i> Almost there, don\'t lose focus!',
+                '<i class="fa-solid fa-star"></i> Just a little bit more!',
+                '<i class="fa-solid fa-bolt-lightning"></i> Faster!',
+                '<i class="fa-solid fa-trophy"></i> You can do it!'
+            ];
+
+            // --- COUNTDOWN LOGIC ---
+            function updateCountdown() {
+                const now = new Date();
+                const diff = TARGET_DATE - now;
+
+                if (diff <= 0) {
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    unlockBtn.disabled = false;
+                    unlockBtn.textContent = 'Unlock Card';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+                unlockBtn.disabled = true;
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // --- PHASE TRANSITIONS ---
+            function goToPhase(phaseId) {
+                document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+                document.getElementById(phaseId).classList.add('active');
+            }
+
+            // --- PHASE 1: UNLOCK ---
+            unlockBtn.addEventListener('click', function() {
+                if (unlockBtn.disabled) return;
+                goToPhase('phase2');
+                initShuffleGame();
+            });
+
+            // --- PHASE 2: SHUFFLE GAME ---
+            const fakeIcons = [
+                '<i class="fa-regular fa-sun"></i>', '<i class="fa-regular fa-moon"></i>',
+                '<i class="fa-regular fa-gem"></i>', '<i class="fa-regular fa-star"></i>',
+                '<i class="fa-solid fa-leaf"></i>', '<i class="fa-solid fa-feather"></i>'
+            ];
+
+            function createCards() {
+                pictureGrid.innerHTML = '';
+                const shuffledIcons = [...fakeIcons].sort(() => 0.5 - Math.random());
+                
+                for (let i = 0; i < 3; i++) {
+                    const card = document.createElement('div');
+                    card.classList.add('picture-option');
+                    card.dataset.index = i;
+                    
+                    if (i === currentRealIndex) {
+                        card.dataset.isReal = "true";
+                        card.innerHTML = `
+                            <img src="friend.jpg" alt="Real" onerror="this.src='https://via.placeholder.com/200?text=Me'">
+                            <span class="placeholder-text"><i class="fa-regular fa-user"></i></span>
+                            <span class="picture-label">Is this you?</span>
+                        `;
+                    } else {
+                        card.dataset.isReal = "false";
+                        card.innerHTML = `
+                            <span class="placeholder-text">${shuffledIcons.pop()}</span>
+                            <span class="picture-label">Maybe this one?</span>
+                        `;
+                    }
+
+                    card.addEventListener('click', handleCardClick);
+                    pictureGrid.appendChild(card);
+                }
+            }
+
+            function initShuffleGame() {
+                currentRealIndex = Math.floor(Math.random() * 3);
+                createCards();
+                gameQuestion.textContent = "I have a question for you... can you find yourself?";
+                gameQuestion.style.color = "var(--text-muted)";
+                nextToEnergyBtn.style.display = 'none';
+            }
+
+            function shuffleCards() {
+                isAnimating = true;
+                const cards = document.querySelectorAll('.picture-option');
+                cards.forEach(c => c.classList.add('shuffling'));
+
+                setTimeout(() => {
+                    let newIndex;
+                    do { newIndex = Math.floor(Math.random() * 3); } while (newIndex === currentRealIndex);
+                    currentRealIndex = newIndex;
+                    createCards();
+                    isAnimating = false;
+                }, 500);
+            }
+
+            function handleCardClick(e) {
+                if (isAnimating) return;
+                const card = e.currentTarget;
+
+                if (card.dataset.isReal === "true") {
+                    card.classList.add('correct');
+                    card.classList.add('reveal');
+                    document.querySelectorAll('.picture-option').forEach(c => {
+                        if (c !== card) c.style.opacity = '0.2'; 
+                    });
+                    
+                    gameQuestion.innerHTML = 'You found yourself! <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--success-green);"></i>';
+                    gameQuestion.style.color = "var(--success-green)";
+                    nextToEnergyBtn.style.display = 'inline-block';
+                } else {
+                    card.classList.add('wrong');
+                    gameQuestion.textContent = "Oops, wrong card! Shuffling...";
+                    gameQuestion.style.color = "var(--error-red)";
+                    
+                    setTimeout(() => {
+                        shuffleCards();
+                        gameQuestion.textContent = "Try again... can you find yourself?";
+                        gameQuestion.style.color = "var(--text-muted)";
+                    }, 800);
+                }
+            }
+
+            // --- PHASE 3: ENERGY GAME ---
+            nextToEnergyBtn.addEventListener('click', function() {
+                goToPhase('phase3');
+                startEnergyGame();
+            });
+
+            function startEnergyGame() {
+                energy = 0;
+                hasWonEnergyGame = false;
+                isEnergyGameActive = true;
+                energyBar.style.width = '0%';
+                energyBar.style.background = 'linear-gradient(90deg, #f4a2b0, var(--primary-pink))';
+                energyTitle.textContent = "You found yourself!";
+                energyTitle.style.color = "var(--text-main)";
+                energyDesc.innerHTML = messages[0];
+                energyDesc.style.color = "var(--text-muted)";
+
+                // Start the decay loop
+                if (decayInterval) clearInterval(decayInterval);
+                decayInterval = setInterval(() => {
+                    if (!isEnergyGameActive) return;
+                    
+                    if (energy > 0) {
+                        // Increased decay so she HAS to click fast
+                        energy -= 2.5; 
+                        if (energy < 0) energy = 0;
+                        updateEnergyBar();
+                    }
+
+                    // Check if she's losing
+                    if (energy < 30 && energy > 0) {
+                        energyDesc.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Hurry, the energy is draining!';
+                        energyDesc.style.color = "var(--error-red)";
+                    } else if (energy >= 30 && energy < 70) {
+                        energyDesc.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+                        energyDesc.style.color = "var(--primary-pink)";
+                    } else if (energy >= 70 && energy < 100) {
+                        energyDesc.innerHTML = '<i class="fa-solid fa-fire-flame-curved"></i> Almost there, keep clicking!';
+                        energyDesc.style.color = "var(--success-green)";
+                    }
+                }, 100);
+            }
+
+            function updateEnergyBar() {
+                energyBar.style.width = energy + '%';
+                
+                // Change color based on energy level
+                if (energy > 80) {
+                    energyBar.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)'; // Green when almost full
+                } else {
+                    energyBar.style.background = 'linear-gradient(90deg, #f4a2b0, var(--primary-pink))';
+                }
+
+                // Win condition
+                if (energy >= 100 && !hasWonEnergyGame) {
+                    hasWonEnergyGame = true;
+                    isEnergyGameActive = false;
+                    clearInterval(decayInterval);
+                    
+                    energyTitle.textContent = "Energy Full!";
+                    energyTitle.style.color = "var(--success-green)";
+                    energyDesc.innerHTML = '<i class="fa-solid fa-lock-open"></i> You did it! Opening your message...';
+                    energyDesc.style.color = "var(--primary-pink)";
+                    
+                    setTimeout(() => {
+                        letterModal.classList.add('active');
+                    }, 800);
+                }
+            }
+
+            clickHeart.addEventListener('click', function(e) {
+                if (!isEnergyGameActive || hasWonEnergyGame) return;
+
+                // Add click animation
+                clickHeart.style.transform = 'scale(0.85)';
+                setTimeout(() => clickHeart.style.transform = 'scale(1)', 100);
+
+                // Create floating particle
+                const particle = document.createElement('i');
+                particle.classList.add('fa-solid', 'fa-heart', 'particle');
+                particle.style.left = (e.offsetX - 10) + 'px';
+                particle.style.top = (e.offsetY - 10) + 'px';
+                clickHeart.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+
+                // Decreased energy per click (was 6, now 2) so it takes much longer
+                energy += 2;
+                if (energy > 100) energy = 100;
+                
+                updateEnergyBar();
+            });
+
+            // --- CLOSE ENVELOPE ---
+            closeLetter.addEventListener('click', function() {
+                letterModal.classList.remove('active');
+            });
+
+            letterModal.addEventListener('click', function(e) {
+                if (e.target === letterModal) {
+                    letterModal.classList.remove('active');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

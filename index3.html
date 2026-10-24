@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Birthday Surprise 🎂</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Coiny&family=Titan+One&family=Nerko+One&family=Sriracha&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-pink: #feecea;
+            --color-text-pink: #FF7882;
+            --color-heart: #FF7882;
+            --color-bg-letter: #fff8e4;
+            --color-border: #DACCBF;
+            --color-black: #333;
+            --color-white: #fff;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1a0b2e 0%, #2d1b4e 40%, #3b1e5e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            color: #fff4e6;
+        }
+
+        /* --- Animated Background --- */
+        .bg-sparkle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-sparkle span {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            animation: floatUp 12s infinite ease-in-out;
+            filter: blur(1px);
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-60px) scale(1.3); opacity: 0.6; }
+            100% { transform: translateY(-140px) scale(1); opacity: 0; }
+        }
+
+        /* --- Main Container --- */
+        .card-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 800px;
+            perspective: 1200px;
+        }
+
+        .birthday-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 3rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 200, 100, 0.2) inset;
+            border: 1px solid rgba(255, 220, 150, 0.3);
+            text-align: center;
+            animation: cardGlow 4s infinite alternate;
+        }
+        @keyframes cardGlow {
+            0% { box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 200, 100, 0.2) inset, 0 0 30px rgba(255, 180, 50, 0.2); }
+            100% { box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 3px rgba(255, 220, 120, 0.5) inset, 0 0 50px rgba(255, 200, 80, 0.5); }
+        }
+
+        /* --- Typography --- */
+        h1 {
+            font-family: 'Titan One', sans-serif;
+            font-size: clamp(2rem, 8vw, 3.2rem);
+            background: linear-gradient(135deg, #ffe6b0, #ffb347, #ff7e5f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 180, 0, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .sub-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #e9d6b0;
+            margin-bottom: 2rem;
+            border-bottom: 1px dashed rgba(255, 215, 140, 0.4);
+            padding-bottom: 1rem;
+        }
+
+        /* --- Lock Screen --- */
+        .lock-icon {
+            font-size: 4rem;
+            margin: 1rem 0;
+            filter: drop-shadow(0 0 12px gold);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .date-badge {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 0.7rem 2rem;
+            border-radius: 100px;
+            border: 1px solid gold;
+            font-family: 'Sriracha', cursive;
+            font-size: 1.2rem;
+            color: #ffe9a7;
+            margin: 1rem 0;
+        }
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.8rem 0;
+            flex-wrap: wrap;
+        }
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            padding: 0.6rem 1.2rem;
+            min-width: 70px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .countdown-value {
+            font-family: 'Titan One', sans-serif;
+            font-size: 2rem;
+            color: #ffd966;
+        }
+        .countdown-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .unlock-btn {
+            background: linear-gradient(145deg, #ffb347, #ff7e5f);
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 100px;
+            font-family: 'Sriracha', cursive;
+            font-size: 1.3rem;
+            color: #1e0f2b;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 180, 50, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 200, 0.6);
+        }
+        .unlock-btn:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.7);
+        }
+        .unlock-btn:disabled {
+            opacity: 0.5;
+            filter: grayscale(0.7);
+            cursor: not-allowed;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            display: none;
+            opacity: 0;
+            transform: scale(0.96);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .main-content.reveal {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ffd966;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 200, 0, 0.5);
+        }
+        .question {
+            font-family: 'Titan One', sans-serif;
+            font-size: 1.8rem;
+            margin: 1.5rem 0;
+            color: #ffe9c7;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+        }
+
+        /* --- Picture Grid --- */
+        .picture-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .picture-option {
+            flex: 1 1 140px;
+            max-width: 180px;
+            aspect-ratio: 1 / 1;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            animation: floatOption 3s infinite alternate ease-in-out;
+        }
+        .picture-option:nth-child(2) { animation-delay: 0.6s; }
+        .picture-option:nth-child(3) { animation-delay: 1.2s; }
+        @keyframes floatOption {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        .picture-option:hover {
+            transform: scale(1.08) rotate(2deg);
+            border-color: #ffd966;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+        }
+        .picture-option.selected {
+            border: 5px solid #ffd966;
+            box-shadow: 0 0 50px #ffb347;
+            transform: scale(1.05);
+            animation: none;
+        }
+        .picture-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .picture-option .placeholder-text {
+            font-size: 3rem;
+            user-select: none;
+            filter: drop-shadow(0 0 8px gold);
+        }
+        .picture-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.3rem;
+            font-size: 0.75rem;
+            color: #ffe9a7;
+            font-family: 'Sriracha', cursive;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .picture-option:hover .picture-label {
+            transform: translateY(0);
+        }
+
+        /* --- 3D Envelope Animation (Integrated from your code) --- */
+        .boxMail {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.85);
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0.8);
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .boxMail.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+        .boxMail .fa-xmark {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 35px;
+            cursor: pointer;
+            color: #fff;
+            transition: transform 0.3s;
+        }
+        .boxMail .fa-xmark:hover {
+            transform: scale(1.2) rotate(90deg);
+        }
+        
+        .boxMail-container {
+            position: relative;
+            width: 750px;
+            height: 500px;
+            display: flex;
+            margin: 0;
+            perspective: 2000px;
+            transition: all 0.5s;
+        }
+        /* The hover effect that opens the card */
+        .boxMail-container:hover {
+            transform: rotate(-2deg);
+            filter: drop-shadow(0 0 15px #FF7882);
+        }
+        .boxMail-container:hover .card1 {
+            transform: translate(-187px, -250px) rotateY(-140deg);
+        }
+
+        .card1, .card2 {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #000;
+        }
+
+        .card1 {
+            background: linear-gradient(to right, #FF7882, #FF7882 63%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: all 1s ease-in-out;
+        }
+        .card1 .userImg {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid white;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        .card1 .userImg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card1 h4 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card1 h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 40px;
+            text-transform: uppercase;
+            width: 80%;
+            text-align: center;
+            line-height: 1.5;
+            letter-spacing: 3px;
+            transform: rotate(-5deg);
+            text-shadow: 0 0 5px white, 0 0 10px white;
+        }
+
+        .card2 {
+            background: linear-gradient(to right, #e0e0e0, #ffffff 30%);
+            z-index: 1;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: all 1s;
+        }
+        .card2-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #FF7882;
+            transition: all 1s;
+            overflow: hidden;
+            color: #fff;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card2 h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .card2 p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            text-indent: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            /* Simulating the typewriter/letter reveal */
+        }
+        .boxMail-container:hover .card2 p {
+            opacity: 1;
+            transition-delay: 1s; /* Wait for the card to open */
+        }
+        .boxMail-container:hover .card2 h3 {
+            opacity: 1;
+            transition-delay: 0.5s;
+        }
+        .imageCute2 {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            transition: 1s;
+        }
+        .boxMail-container:hover .imageCute2 {
+            opacity: 1;
+            transition-delay: 2s;
+            animation: cute3 1s linear infinite;
+        }
+        @keyframes cute3 {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        .imageCute2 img {
+            width: 50px;
+        }
+
+        /* Hidden elements from your original code */
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .boxMail-container { width: 90vw; height: 60vh; }
+            .boxMail-container:hover .card1 { transform: translate(-40%, -50%) rotateY(-140deg); }
+            .card1, .card2 { width: 100%; height: 100%; }
+            .card1 h3 { font-size: 30px; }
+            .card2 p { font-size: 1.1rem; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-sparkle" id="bgSparkle"></div>
+
+    <div class="card-container">
+        <div class="birthday-card">
+            <h1>🎁 HAPPY BIRTHDAY 🎁</h1>
+            <div class="sub-message">for someone very special</div>
+
+            <!-- LOCK SCREEN -->
+            <div id="lockScreen">
+                <div class="lock-icon">🔒</div>
+                <div class="date-badge">📅 NOVEMBER 2<sup>nd</sup> 2026</div>
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item"><div class="countdown-value" id="days">00</div><div class="countdown-label">days</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="hours">00</div><div class="countdown-label">hours</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="minutes">00</div><div class="countdown-label">min</div></div>
+                    <div class="countdown-item"><div class="countdown-value" id="seconds">00</div><div class="countdown-label">sec</div></div>
+                </div>
+                <button class="unlock-btn" id="unlockBtn" disabled>🔐 Unlock on Nov 2</button>
+                <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 0.8rem;">(the magic happens on your birthday)</p>
+            </div>
+
+            <!-- MAIN CONTENT (hidden until unlock) -->
+            <div class="main-content" id="mainContent">
+                <div class="greeting">✨ HAPPY BIRTHDAY, BEAUTIFUL! ✨</div>
+                <div class="question">is this you?</div>
+
+                <div class="picture-grid" id="pictureGrid">
+                    <!-- Option 1 - Embedded Real Image -->
+                    <div class="picture-option" data-option="1" id="option1">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABkAGQ DASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAABQIDBAYHAQgA/8QAPBAAAQMDAgQEAwYFAwUAAAAAAQIDBAAFEQYSIRMxQQciUWEUcYGRobHB0fAVI0Lh8RYkMlJicpKi/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDBAAFBv/EACURAAICAQQCAgIDAAAAAAAAAAABAhEDBBIhMRNBIlEFYXGBkf/aAAwDAQACEQMRAD8A9U0000UUUVQFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//9k=" alt="Real Photo">
+                        <span class="picture-label">Is this you?</span>
+                    </div>
+                    <!-- Option 2 -->
+                    <div class="picture-option" data-option="2" id="option2">
+                        <span class="placeholder-text">🌸</span>
+                        <span class="picture-label">or this?</span>
+                    </div>
+                    <!-- Option 3 -->
+                    <div class="picture-option" data-option="3" id="option3">
+                        <span class="placeholder-text">🌟</span>
+                        <span class="picture-label">or maybe this?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Envelope Modal (Hidden by default) -->
+    <div class="boxMail" id="letterModal">
+        <i class="fa-solid fa-xmark" id="closeLetter"></i>
+        <div class="boxMail-container">
+            <div class="card1">
+                <div class="userImg">
+                    <!-- Reusing the same embedded image -->
+                    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABkAGQ DASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAABQIDBAYHAQgA/8QAPBAAAQMDAgQEAwYFAwUAAAAAAQIDBAAFEQYSIRMxQQciUWEUcYGRobHB0fAVI0Lh8RYkMlJicpKi/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDBAAFBv/EACURAAICAQQCAgIDAAAAAAAAAAABAhEDBBIhMRNBIlEFYXGBkf/aAAwDAQACEQMRAD8A9U0000UUUVQFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//9k=" alt="Photo">
+                </div>
+                <h4 class="username">To: Beautiful 💖</h4>
+                <h3>Happy Birthday</h3>
+            </div>
+            <div class="card2">
+                <div class="card2-content">
+                    <h3>To You!</h3>
+                    <p>Happy birthday 🥳🎂🥳. The day you came into my life, I wasn't really attached, but day by day you became close to my heart. Now you are truly my younger sister. I wish I could remove some of the pain from your life which you are bearing alone. But you're always welcome 🤗 you can talk anytime you want. This year, may all your dreams come true. Don't be sad, okay? Be happy 😌</p>
+                    <div class="imageCute2">
+                        <i class="fa-solid fa-heart" style="color: #fff; font-size: 40px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Target Date: November 2, 2026
+            const TARGET_DATE = new Date(2026, 10, 2, 0, 0, 0); 
+
+            // Elements
+            const lockScreen = document.getElementById('lockScreen');
+            const mainContent = document.getElementById('mainContent');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const letterModal = document.getElementById('letterModal');
+            const closeLetter = document.getElementById('closeLetter');
+            const options = document.querySelectorAll('.picture-option');
+
+            // Countdowns
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            // --- Countdown Logic ---
+            function updateCountdown() {
+                const now = new Date();
+                const diff = TARGET_DATE - now;
+
+                if (diff <= 0) {
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                    unlockBtn.disabled = false;
+                    unlockBtn.textContent = '🎉 UNLOCK NOW 🎉';
+                    unlockBtn.style.animation = 'pulse 1.2s infinite';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                daysEl.textContent = String(days).padStart(2, '0');
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+
+                unlockBtn.disabled = true;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // --- Unlock Button ---
+            unlockBtn.addEventListener('click', function() {
+                if (unlockBtn.disabled) return;
+                
+                // Hide lock screen smoothly
+                lockScreen.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                lockScreen.style.opacity = '0';
+                lockScreen.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    lockScreen.style.display = 'none';
+                    mainContent.classList.add('reveal');
+                }, 400);
+            });
+
+            // --- Picture Selection Logic ---
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Visual selection
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    const optionNum = this.dataset.option;
+
+                    if (optionNum === '1') {
+                        // Correct answer! Open the 3D letter
+                        setTimeout(() => {
+                            letterModal.classList.add('active');
+                        }, 600); // Small delay to enjoy the selection animation
+                    } else {
+                        // Playful wrong answers
+                        alert("Aww, close! But the real you is even more stunning. 💖 Try again!");
+                        this.classList.remove('selected');
+                    }
+                });
+            });
+
+            // --- Close Letter Modal ---
+            closeLetter.addEventListener('click', function() {
+                letterModal.classList.remove('active');
+                // Reset selection so she can play again
+                options.forEach(opt => opt.classList.remove('selected'));
+            });
+
+            // Click outside to close
+            letterModal.addEventListener('click', function(e) {
+                if (e.target === letterModal) {
+                    letterModal.classList.remove('active');
+                    options.forEach(opt => opt.classList.remove('selected'));
+                }
+            });
+
+            // --- Background Sparkles ---
+            const sparkleContainer = document.getElementById('bgSparkle');
+            for (let i = 0; i < 40; i++) {
+                const span = document.createElement('span');
+                const size = Math.random() * 6 + 2;
+                span.style.width = size + 'px';
+                span.style.height = size + 'px';
+                span.style.left = Math.random() * 100 + '%';
+                span.style.top = Math.random() * 100 + '%';
+                span.style.animationDelay = Math.random() * 12 + 's';
+                span.style.animationDuration = (8 + Math.random() * 8) + 's';
+                sparkleContainer.appendChild(span);
+            }
+        })();
+    </script>
+</body>
+</html>
