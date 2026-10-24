@@ -170,10 +170,6 @@
         .boxMail-container:hover .imageCute2 { opacity: 1; transition-delay: 1.5s; }
         .imageCute2 i { color: var(--primary-pink); font-size: 1.5rem; }
 
-        /* Test Button */
-        .test-btn { position: fixed; bottom: 15px; right: 15px; z-index: 9999; background: #2d2a2b; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s; }
-        .test-btn:hover { background: #000; }
-
         /* --- MOBILE SPECIFIC FIXES --- */
         @media (max-width: 600px) {
             .birthday-card { padding: 2rem 1rem; min-height: 400px; }
@@ -197,9 +193,6 @@
     </style>
 </head>
 <body>
-
-    <!-- TEST BUTTON (Remove this line before sending to your friend) -->
-    <button class="test-btn" onclick="document.getElementById('unlockBtn').disabled = false; document.getElementById('unlockBtn').click();">Test Unlock</button>
 
     <div class="card-container">
         <div class="birthday-card">
@@ -555,4 +548,3 @@
     </script>
 </body>
 </html>
-
