@@ -118,6 +118,7 @@
             display: flex; align-items: center; justify-content: center; margin: 0 auto;
             cursor: pointer; transition: all 0.1s; box-shadow: 0 10px 20px rgba(217, 106, 123, 0.15);
             user-select: none;
+            /* Fixes the mobile 300ms delay */
             touch-action: manipulation; 
             -webkit-tap-highlight-color: transparent;
         }
@@ -459,7 +460,7 @@
                 if (decayInterval) clearInterval(decayInterval);
                 
                 // Decay: Lose 1% every 100ms (10% per second).
-                // Click gives +6%. She needs about 15-20 clicks total to win.
+                // Click gives +7%. She needs about 14-15 clicks total to win.
                 decayInterval = setInterval(() => {
                     if (!isEnergyGameActive) return;
                     
@@ -507,6 +508,7 @@
                 }
             }
 
+            // Using PointerDown handles both mobile touch and PC mouse instantly
             function handleHeartClick(e) {
                 if (!isEnergyGameActive || hasWonEnergyGame) return;
                 e.preventDefault(); 
@@ -518,7 +520,7 @@
                 let clickX = rect.width / 2;
                 let clickY = rect.height / 2;
                 
-                if (e.type === 'mousedown') {
+                if (e.type === 'pointerdown' || e.type === 'mousedown') {
                     clickX = e.offsetX;
                     clickY = e.offsetY;
                 } else if (e.touches && e.touches[0]) {
@@ -533,15 +535,15 @@
                 clickHeart.appendChild(particle);
                 setTimeout(() => particle.remove(), 1000);
 
-                // Perfect balance: +6% per click
-                energy += 6;
+                // +7% per click
+                energy += 7;
                 if (energy > 100) energy = 100;
                 
                 updateEnergyBar();
             }
 
-            clickHeart.addEventListener('mousedown', handleHeartClick);
-            clickHeart.addEventListener('touchstart', handleHeartClick, {passive: false});
+            // Pointerdown is the magic fix for mobile vs PC speed differences
+            clickHeart.addEventListener('pointerdown', handleHeartClick);
 
             // --- CLOSE ENVELOPE ---
             closeLetter.addEventListener('click', function() {
